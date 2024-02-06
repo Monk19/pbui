@@ -5,10 +5,10 @@ export default function Sidenav() {
   return (
     <nav className="d-flex align-items-center">
       <ul>
-        <Link href="/" className="">
+        <Link href="/Dashboard" className="">
           <li>Home</li>
         </Link>
-        <Link href="/Dashboard">
+        <Link href="/Dashboard/myspace">
           <li>Space</li>
         </Link>
         <Link href="#">Logout</Link>

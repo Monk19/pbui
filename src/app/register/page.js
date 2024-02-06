@@ -16,6 +16,10 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  ButtonDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
 } from "reactstrap";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -35,11 +39,16 @@ const SignUpPage = ({ user }) => {
   const [builderButton, setBuilderButton] = useState(false);
   const [channelButton, setChannelButton] = useState(false);
   const [selectedRole, setSelectedRole] = useState({
-    name: "Customer",
-    value: 3,
+    name: "Photographer",
+    value: 1,
   });
   const [company, setCompany] = useState("");
-
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState({
+    name: "Basic",
+    value: 1,
+  });
+  const [packageDropDown, setPackageDropDown] = useState(false);
   const handlePartnerBuilderClick = () => {
     setSelectedRole({ name: "Partner Builder", value: 5 });
     setBuilderButton(true);
@@ -80,7 +89,7 @@ const SignUpPage = ({ user }) => {
                   alt=""
                   style={{ width: 128 }}
                 /> */}
-                <div>L</div>
+                <h2>Aakashaa</h2>
               </CardHeader>
 
               <CardBody className="card-body">
@@ -99,6 +108,7 @@ const SignUpPage = ({ user }) => {
                     firstname: "",
                     lastname: "",
                     agreeToTerms: false,
+                    whatsappNotification: false,
                   }}
                   validationSchema={Yup.object().shape({
                     firstname: Yup.string().required(
@@ -135,6 +145,8 @@ const SignUpPage = ({ user }) => {
                     };
                     console.log("values", values);
                     console.log("trimmedValues", trimmedValues);
+                    console.log("-->", values);
+
                     if (!trimmedValues.firstname || !trimmedValues.lastname) {
                       toast.error(
                         "First Name and Last Name fields are Mandatory"
@@ -163,7 +175,7 @@ const SignUpPage = ({ user }) => {
                         const apiEndpoint =
                           user === "partner"
                             ? `${BASE_URL}/auth/partner-builder-sign-up`
-                            : `${BASE_URL}/auth/customer-sign-up`;
+                            : `http://localhost:3402/register`;
 
                         const payload = {
                           email: trimmedValues.email,
@@ -172,7 +184,10 @@ const SignUpPage = ({ user }) => {
                           mobile: trimmedValues.number,
                           first_name: trimmedValues.firstname,
                           last_name: trimmedValues.lastname,
+                          whatsappNotification: values["whatsappNotification"],
+                          package: selectedPackage.name,
                         };
+                        // console.log()
 
                         if (user === "partner") {
                           payload.company = company;
@@ -184,13 +199,15 @@ const SignUpPage = ({ user }) => {
                             setDisable(false);
                             console.log(response.data);
                             toast.success(response.data.message);
-                            router.push(
-                              "/authentication/twoFactorVerification"
-                            );
+                            console.log("Status code", response.status);
+                            // router.push(
+                            //   "/authentication/twoFactorVerification"
+                            // );
+                            router.push("/login");
                           })
                           .catch((error) => {
                             setDisable(false);
-                            console.log(error);
+                            console.log(error.response.status);
                             toast.error(error.response.data.message);
                           });
                       } else {
@@ -485,6 +502,110 @@ const SignUpPage = ({ user }) => {
                           </div>
                         ) : null}
                       </div>
+                      <div className="d-flex">
+                        <ButtonDropdown
+                          isOpen={dropdownOpen}
+                          toggle={() => setDropdownOpen(!dropdownOpen)}
+                          className="ms-3 custom-dropdown"
+                        >
+                          <DropdownToggle
+                            caret
+                            className="custom-dropdown-toggle"
+                          >
+                            {selectedRole?.name}
+                          </DropdownToggle>
+                          <DropdownMenu className="custom-dropdown-menu">
+                            <DropdownItem
+                              onClick={() =>
+                                setSelectedRole({
+                                  name: "Photographer",
+                                  value: 1,
+                                })
+                              }
+                            >
+                              Photographer
+                            </DropdownItem>
+
+                            <DropdownItem
+                              onClick={() =>
+                                setSelectedRole({ name: "Customer", value: 2 })
+                              }
+                            >
+                              Customer
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </ButtonDropdown>
+                        <ButtonDropdown
+                          isOpen={packageDropDown}
+                          toggle={() => setPackageDropDown(!packageDropDown)}
+                          className="ms-3 custom-dropdown"
+                        >
+                          <DropdownToggle
+                            caret
+                            className="custom-dropdown-toggle"
+                          >
+                            {selectedPackage?.name}
+                          </DropdownToggle>
+                          <DropdownMenu className="custom-dropdown-menu">
+                            <DropdownItem
+                              onClick={() =>
+                                setSelectedPackage({
+                                  name: "Basic",
+                                  value: 10,
+                                })
+                              }
+                            >
+                              Basic 10TB
+                            </DropdownItem>
+
+                            <DropdownItem
+                              onClick={() =>
+                                setSelectedPackage({
+                                  name: "premium",
+                                  value: 20,
+                                })
+                              }
+                            >
+                              premium 40TB
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </ButtonDropdown>
+                      </div>
+                      <div className="form-group">
+                        <div className="custom-control custom-checkbox">
+                          <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            id="opt-whatsapp"
+                            name="whatsappNotification"
+                            checked={values.whatsappNotification}
+                            onChange={() => {
+                              setFieldValue(
+                                "whatsappNotification",
+                                !values.whatsappNotification
+                              );
+                              // handleCheckboxClick(); // Open the modal when the checkbox is
+                            }}
+                          />
+                          <label
+                            className="custom-control-label"
+                            htmlFor="opt-whatsapp"
+                            style={{ marginLeft: "0.5rem" }}
+                          >
+                            Opt for whatsapp notifications
+                            <a href="#" onClick={toggleModal}></a>
+                          </label>
+                        </div>
+                        {errors.agreeToTerms && touched.agreeToTerms && (
+                          <div
+                            className="text-danger ms-4"
+                            style={{ fontSize: "small" }}
+                          >
+                            {errors.agreeToTerms}
+                          </div>
+                        )}
+                      </div>
+
                       <div className="form-group">
                         <div className="custom-control custom-checkbox">
                           <input
@@ -577,7 +698,3 @@ const SignUpPage = ({ user }) => {
 };
 
 export default SignUpPage;
-
-SignUpPage.getLayout = function getLayout(SignUpPage) {
-  return <>{SignUpPage}</>;
-};
