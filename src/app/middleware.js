@@ -1,0 +1,1 @@
+const trailProtect = ["/register"];

@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Anek+Gurmukhi:wght@300;600&display=swap");
+nav {
+  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.3);
+  min-height: 100%;
+}
+nav a {
+  text-decoration: none;
+  font-family: "Anek Gurmukhi", sans-serif;
+  color: black;
+  font-weight: bold;
+}
+
+nav > ul {
+  width: 100%;
+}
