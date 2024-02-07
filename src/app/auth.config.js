@@ -1,8 +1,25 @@
-import NextAuth from "next-auth/next";
+import { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from 'axios'
-export default NextAuth({
-  provider: [
+
+export const authConfig = {
+  pages: {
+    signIn: "/login",
+  },
+  callbacks: {
+    authorized({ auth, request }) {
+      console.log(auth, request);
+      const isLoggedIn = !!auth?.user;
+      const isOnDashboard = request.nextUrl.pathname.startsWith("/dashboard");
+      if (isOnDashboard) {
+        if (isLoggedIn) return true;
+        return false; // Redirect unauthenticated users to login page
+      } else if (isLoggedIn) {
+        return Response.redirect(new URL("/dashboard", request.nextUrl));
+      }
+      return true;
+    },
+  },
+  providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
@@ -17,8 +34,7 @@ export default NextAuth({
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
         const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
-        console.log("nextjs credentails provider---->", req);
-// const res = 
+
         if (user) {
           // Any object returned will be saved in `user` property of the JWT
           return user;
@@ -30,5 +46,5 @@ export default NextAuth({
         }
       },
     }),
-  ],
-});
+  ], // Add providers with an empty array for now
+};

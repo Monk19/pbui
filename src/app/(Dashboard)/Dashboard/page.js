@@ -1,11 +1,27 @@
 "use client";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { authContex } from "@/authcontext/withAuthContext";
+import { useRouter } from "next/navigation";
+import authInterceptor from "@/api/checkAuthInterceptor";
 function Dashboard() {
+  const session = useSession();
+  const auth = useContext(authContex);
+  const router = useRouter();
+  console.log("sessino--0-", session);
+  const checkAuth = () => {
+    if (!auth.auth) {
+      router.push("/login");
+    }
+  };
+  useEffect(() => {
+    console.log(auth);
+    checkAuth();
+  }, []);
   return (
     <div>
-      
       <div>From Dashboard</div>
       <div
         onClick={() => {
@@ -13,15 +29,8 @@ function Dashboard() {
             Authorization: `Bearer ${localStorage.getItem("tkn")}`,
           };
 
-          axios
-            .get("http://localhost:3402/checkauth", { headers })
-            .then((res) => {
-              console.log("response Status Code", res.status);
-              console.log("request data", res.data);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          const a = authInterceptor("/checkauth", { headers });
+          console.log(a);
         }}
       >
         Check auth
