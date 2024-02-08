@@ -10,6 +10,7 @@ function login() {
     password: "",
   });
   const auth = useContext(authContex);
+  console.log(auth);
   const router = useRouter();
   const handleLogin = (e) => {
     const { name, value } = e.target;
@@ -36,15 +37,15 @@ function login() {
             //   password: loginDetails.password,
             // });
             axios
-              .post("http://localhost:3402/login", {
+              .post("http://localhost:3402/api/login", {
                 userName: loginDetails.userName,
                 password: loginDetails.password,
               })
               .then((res) => {
                 localStorage.setItem("tkn", res.data.token);
                 console.log("session token--->", res.data.token);
-
-                auth.changeAuth();
+                auth.handlemyUserId(res.data.uId);
+                auth.changeAuth(true);
                 router.push("/Dashboard");
               });
           }}

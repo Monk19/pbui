@@ -3,7 +3,6 @@ import "./globals.css";
 import "bootstrap/dist/css/bootstrap.css";
 import Head from "next/head";
 import Sidenav from "@/components/Sidenav";
-import Provider from "./Provider.js";
 import { AuthContext } from "../authcontext/withAuthContext";
 const inter = Inter({ subsets: ["latin"] });
 // import "/bootstrap/dist/css/bootstrap.css";
@@ -20,11 +19,10 @@ export default function RootLayout({ children }) {
           {/* <div className="col-3 col-sm-md-3">
             <Sidenav />
           </div> */}
-          <Provider>
-            <AuthContext>
-              <div className="col">{children}</div>
-            </AuthContext>
-          </Provider>
+
+          <AuthContext>
+            <div className="col">{children}</div>
+          </AuthContext>
         </div>
       </body>
     </html>

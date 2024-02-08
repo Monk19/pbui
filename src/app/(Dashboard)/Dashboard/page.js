@@ -7,10 +7,10 @@ import { authContex } from "@/authcontext/withAuthContext";
 import { useRouter } from "next/navigation";
 import authInterceptor from "@/api/checkAuthInterceptor";
 function Dashboard() {
-  const session = useSession();
+  // const session = useSession();
   const auth = useContext(authContex);
   const router = useRouter();
-  console.log("sessino--0-", session);
+  // console.log("sessino--0-", session);
   const checkAuth = () => {
     if (!auth.auth) {
       router.push("/login");
