@@ -5,6 +5,7 @@ import Head from "next/head";
 import Sidenav from "@/components/Sidenav";
 import { AuthContext } from "../authcontext/withAuthContext";
 const inter = Inter({ subsets: ["latin"] });
+import { AuthProvider } from "@/components/auth-provider";
 // import "/bootstrap/dist/css/bootstrap.css";
 export const metadata = {
   title: "Create Next App",
@@ -19,10 +20,11 @@ export default function RootLayout({ children }) {
           {/* <div className="col-3 col-sm-md-3">
             <Sidenav />
           </div> */}
-
-          <AuthContext>
-            <div className="col">{children}</div>
-          </AuthContext>
+          <AuthProvider>
+            <AuthContext>
+              <div className="col">{children}</div>
+            </AuthContext>
+          </AuthProvider>
         </div>
       </body>
     </html>

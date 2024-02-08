@@ -4,10 +4,12 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   async function middleware(request) {
+    console.log("incoming request", request);
     const token = await getToken({
       req: request,
       secret: process.env.NEXTAUTH_SECRET,
     });
+    console.log("My token from with auth in middlewate", token);
     const isIndexpage = request.nextUrl.pathname === "/";
     const isAuthRoute = authRoutes.some((route) =>
       request.nextUrl.pathname.startsWith(route)

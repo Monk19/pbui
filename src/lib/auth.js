@@ -1,6 +1,6 @@
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
-
+import axios from "axios";
 export const authOptions = {
   pages: {
     signIn: "/login",
@@ -22,22 +22,26 @@ export const authOptions = {
           type: "password",
         },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         // const user = "";
         // const token = "";
+        console.log("incoming credentials--->", credentials, req);
+        const { userName, password } = credentials;
         try {
           const response = await axios.post("http://localhost:3402/api/login", {
-            userName: loginDetails.userName,
-            password: loginDetails.password,
+            userName: userName,
+            password: password,
           });
+          console.log("data---->", response);
           if (!response.ok) {
             throw response;
           }
-          const { user, token } = response.json();
+          const { ui, token } = response.json();
+
           if (!token) {
             throw response;
           }
-          return { ...response.json(), token: data.token };
+          return { ...response.json(), token: token };
 
           // .then((res) => {
           //   localStorage.setItem("tkn", res.data.token);
@@ -54,9 +58,14 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user, trigger, session }) => {
-      console.log(token, user, trigger, session);
+    async jwt({ token, user, trigger, session }) {
+      console.log("check jwt callback-->", token, uId, trigger, session);
       return true;
+    },
+    async session(session, token) {
+      // Modify the session object
+      session.user.id = token.id; // Example: Set user ID in the session
+      return session;
     },
   },
 };
