@@ -3,6 +3,7 @@ import "./globals.css";
 import "bootstrap/dist/css/bootstrap.css";
 import Head from "next/head";
 import Sidenav from "@/components/Sidenav";
+// import "../../public/assets/styles/main.scss";
 import { AuthContext } from "../authcontext/withAuthContext";
 const inter = Inter({ subsets: ["latin"] });
 import { AuthProvider } from "@/components/auth-provider";
@@ -15,17 +16,33 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={"main-background fluid-container"}>
-        <div className="row main-container-layout">
-          {/* <div className="col-3 col-sm-md-3">
-            <Sidenav />
-          </div> */}
-          <AuthProvider>
-            <AuthContext>
-              <div className="col">{children}</div>
-            </AuthContext>
-          </AuthProvider>
-        </div>
+      <head>
+        <title>Aakasha</title>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+          integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+          crossorigin="anonymous"
+        ></script>
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+          crossorigin="anonymous"
+        ></script>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css"
+        />
+      </head>
+      <body className="">
+        <AuthProvider>
+          <AuthContext>{children}</AuthContext>
+        </AuthProvider>
       </body>
     </html>
   );

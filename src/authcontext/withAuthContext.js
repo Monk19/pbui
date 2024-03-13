@@ -29,25 +29,25 @@ export function AuthContext({ children }) {
     changeAuth(false);
     router.push("/login");
   };
-  useEffect(() => {
-    console.log(!localStorage.getItem("tkn"));
-    if (!localStorage.getItem("tkn")) {
-      router.push("/login");
-      changeAuth(false);
-    } else {
-      router.push("/Dashboard");
-      changeAuth(true);
-    }
-    window.addEventListener("storage", handleStorage());
-    return () => {
-      window.removeEventListener("storage", handleStorage());
-    };
-  }, []);
-  useEffect(() => {
-    if (!auth) {
-      router.push("/login");
-    }
-  }, [auth]);
+  // useEffect(() => {
+  //   console.log(!localStorage.getItem("tkn"));
+  //   if (!localStorage.getItem("tkn")) {
+  //     router.push("/login");
+  //     changeAuth(false);
+  //   } else {
+  //     router.push("/Dashboard");
+  //     changeAuth(true);
+  //   }
+  //   window.addEventListener("storage", handleStorage());
+  //   return () => {
+  //     window.removeEventListener("storage", handleStorage());
+  //   };
+  // }, []);
+  // useEffect(() => {
+  //   if (!auth) {
+  //     router.push("/login");
+  //   }
+  // }, [auth]);
   return (
     <authContex.Provider
       value={{ auth: auth, myRoleId, changeAuth, handlemyUserId, handleLogout }}

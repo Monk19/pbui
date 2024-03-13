@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { authContex } from "../../authcontext/withAuthContext";
+import { authContex } from "../../../authcontext/withAuthContext";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
-import ptree from "../../../public/image/pa-img.png";
+import ptree from "../../../../public/image/pa-img.png";
 import Image from "next/image";
 
 function login() {
@@ -26,12 +26,12 @@ function login() {
     console.log(auth.changeAuth);
   }, []);
   return (
-    <div>
-      <section className="bg-light py-3 py-md-5 py-xl-8">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
-              <div className="mb-3">
+    <div className="login-box">
+      <section className=" py-3 py-md-5 py-xl-8">
+        <div className="">
+          <div className=" justify-content-center">
+            <div className="">
+              {/* <div className="mb-3">
                 <div className="text-center mb-3">
                   <a href="#!">
                     <Image
@@ -44,7 +44,7 @@ function login() {
                     />
                   </a>
                 </div>
-              </div>
+              </div> */}
               <div className="card border border-light-subtle rounded-4">
                 <div className="card-body p-3 p-md-4 p-xl-5">
                   <form action="#!">

@@ -3,6 +3,9 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import "./space.scss";
 import { authContex } from "@/authcontext/withAuthContext";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import TopBar from "@/components/TopBar";
 const myUsers = [
   { name: "ravi", id: 1 },
   { name: "raj", id: 2 },
@@ -24,6 +27,11 @@ export default function MySpace() {
   });
   const [roleToggle, setRoleToggle] = useState();
   const auth = useContext(authContex);
+  const session = useSession();
+  const router = useRouter();
+
+  console.log("session in myspace-->", session?.data);
+
   // const [myRole, setMyrole] = useState(auth.myRoleId);
 
   console.log("auth context check--->", auth);
@@ -74,110 +82,157 @@ export default function MySpace() {
   // folder_shared_to: 0;
   // folder_size: 8;
 
+  // if (session.status == "unauthenticated") {
+  //   console.log("--0-0-0-0->", session.status);
+  //   router.push("/login");
+  // }
   return (
-    <div className="myspace-container">
-      <div>
-        {" "}
-        <div>
-          <h1>My Space</h1>
-          {myFolders.map((ele, index) => {
-            const { folder_name, folder_size } = ele;
-            return (
-              <div className="folder-body" onClick={() => {}}>
-                <div>
-                  {folder_name}:{folder_size}
-                </div>
-                <select
-                  name="cars"
-                  id="cars"
-                  onChange={(e) => {
-                    console.log("Select user to share", e.target.value);
-                    setShareFolderDetails((prev) => ({
-                      ...prev,
-                      sharedTo: +e.target.value,
-                      folderName: ele.folder_name,
-                      folderId: +ele.folder_id,
-                    }));
-                    console.log(
-                      "Sharing the folder user---->",
-                      shareFolderDetails
-                    );
-                  }}
-                >
-                  <option value="">Select user</option>
-                  {myUsers.map((ele, index) => {
-                    return <option value={ele.id}>{ele.name}</option>;
-                  })}
-                  {/* 
-                <option value="saab">Saab</option>
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option> */}
-                </select>
-                <div onClick={shareMyFolder}>share</div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="shared-to-me">
-          <h1>Shared to me</h1>
-          {sharedFolders.map((ele, index) => {
-            const { folder_name, folder_size } = ele;
-            return (
-              <div className="folder-body" onClick={() => {}}>
-                <div>
-                  {folder_name}:{folder_size}
-                </div>
-                <select
-                  name="cars"
-                  id="cars"
-                  onChange={(e) => {
-                    console.log("Select user to share", e.target.value);
-                    setShareFolderDetails((prev) => ({
-                      ...prev,
-                      sharedTo: +e.target.value,
-                      folderName: ele.folder_name,
-                      folderId: +ele.folder_id,
-                    }));
-                    console.log(
-                      "Sharing the folder user---->",
-                      shareFolderDetails
-                    );
-                  }}
-                >
-                  <option value="">Select user</option>
-                  {myUsers.map((ele, index) => {
-                    return <option value={ele.id}>{ele.name}</option>;
-                  })}
-                  {/* 
-                <option value="saab">Saab</option>
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option> */}
-                </select>
-                <div onClick={shareMyFolder}>share</div>
-              </div>
-            );
-          })}
+    <div className="">
+      <TopBar
+        user={session.data?.user ? session.data.user : { name: "", email: "" }}
+      />
+      <div class="page-header">
+        <div class="row align-items-center">
+          <div class="col-md-4 col-lg-6">
+            <div class="page-header-title">My Space</div>
+          </div>
+          <div class="col-md-8 col-lg-6 text-right header-btns">
+            <a href="#">
+              Create Floder <span class="icon-cloud-upload"></span>
+            </a>
+            <a href="#">
+              Upload <span class="icon-cloud-upload"></span>
+            </a>
+          </div>
         </div>
       </div>
-      <div>
-        <select
-          name="cars"
-          id="cars"
-          onChange={(e) => {
-            console.log("Toggle user", e.target.value);
-            auth.handlemyUserId(e.target.value);
-          }}
-        >
-          <option value="">Select user</option>
-          {myUsers.map((ele, index) => {
-            return <option value={ele.id}>{ele.name}</option>;
-          })}
-          {/* 
-                <option value="saab">Saab</option>
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option> */}
-        </select>
+      <div class="row my-2">
+        <div class="col-6 col-md-6 col-lg-3">
+          <div class="folder-item">
+            <span class="icon-folder-alt"></span>
+            <div class="folder-name">Marriage Event</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-6 col-lg-3">
+          <div class="folder-item">
+            <span class="icon-folder-alt"></span>
+            <div class="folder-name">RRR Audio Release</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-6 col-lg-3">
+          <div class="folder-item">
+            <span class="icon-folder-alt"></span>
+            <div class="folder-name">Birthday Function</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-6 col-lg-3">
+          <div class="folder-item">
+            <span class="icon-folder-alt"></span>
+            <div class="folder-name">Paris Tour</div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
+// <div>
+//       <div>
+//         <h1>My Space</h1>
+//         {myFolders.map((ele, index) => {
+//           const { folder_name, folder_size } = ele;
+//           return (
+//             <div className="folder-body" onClick={() => {}}>
+//               <div>
+//                 {folder_name}:{folder_size}
+//               </div>
+//               <select
+//                 name="cars"
+//                 id="cars"
+//                 onChange={(e) => {
+//                   console.log("Select user to share", e.target.value);
+//                   setShareFolderDetails((prev) => ({
+//                     ...prev,
+//                     sharedTo: +e.target.value,
+//                     folderName: ele.folder_name,
+//                     folderId: +ele.folder_id,
+//                   }));
+//                   console.log(
+//                     "Sharing the folder user---->",
+//                     shareFolderDetails
+//                   );
+//                 }}
+//               >
+//                 <option value="">Select user</option>
+//                 {myUsers.map((ele, index) => {
+//                   return <option value={ele.id}>{ele.name}</option>;
+//                 })}
+//                 {/*
+//               <option value="saab">Saab</option>
+//               <option value="mercedes">Mercedes</option>
+//               <option value="audi">Audi</option> */}
+//               </select>
+//               <div onClick={shareMyFolder}>share</div>
+//             </div>
+//           );
+//         })}
+//       </div>
+//       <div className="shared-to-me">
+//         <h1>Shared to me</h1>
+//         {sharedFolders.map((ele, index) => {
+//           const { folder_name, folder_size } = ele;
+//           return (
+//             <div className="folder-body" onClick={() => {}}>
+//               <div>
+//                 {folder_name}:{folder_size}
+//               </div>
+//               <select
+//                 name="cars"
+//                 id="cars"
+//                 onChange={(e) => {
+//                   console.log("Select user to share", e.target.value);
+//                   setShareFolderDetails((prev) => ({
+//                     ...prev,
+//                     sharedTo: +e.target.value,
+//                     folderName: ele.folder_name,
+//                     folderId: +ele.folder_id,
+//                   }));
+//                   console.log(
+//                     "Sharing the folder user---->",
+//                     shareFolderDetails
+//                   );
+//                 }}
+//               >
+//                 <option value="">Select user</option>
+//                 {myUsers.map((ele, index) => {
+//                   return <option value={ele.id}>{ele.name}</option>;
+//                 })}
+//                 {/*
+//               <option value="saab">Saab</option>
+//               <option value="mercedes">Mercedes</option>
+//               <option value="audi">Audi</option> */}
+//               </select>
+//               <div onClick={shareMyFolder}>share</div>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     </div>
+//     <div>
+//       <select
+//         name="cars"
+//         id="cars"
+//         onChange={(e) => {
+//           console.log("Toggle user", e.target.value);
+//           auth.handlemyUserId(e.target.value);
+//         }}
+//       >
+//         <option value="">Select user</option>
+//         {myUsers.map((ele, index) => {
+//           return <option value={ele.id}>{ele.name}</option>;
+//         })}
+//         {/*
+//               <option value="saab">Saab</option>
+//               <option value="mercedes">Mercedes</option>
+//               <option value="audi">Audi</option> */}
+//       </select>
+//     </div>

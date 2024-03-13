@@ -7,7 +7,7 @@ export const authOptions = {
   },
   session: {
     strategy: "jwt",
-    maxAge: parseInt(process.env.NEXTAUTH_JWT_AGE) || 1209600,
+    maxAge: parseInt(process.env.NEXTAUTH_JWT_AGE) || 1200,
   },
   providers: [
     CredentialsProvider({
@@ -32,16 +32,14 @@ export const authOptions = {
             userName: userName,
             password: password,
           });
-          console.log("data---->", response);
-          if (!response.ok) {
+          //   console.log("data---->", response);
+          console.log("response.ok", response.data);
+          const { accessToken, uId } = response.data;
+          if (!accessToken) {
             throw response;
           }
-          const { ui, token } = response.json();
-
-          if (!token) {
-            throw response;
-          }
-          return { ...response.json(), token: token };
+          const user = response.data;
+          return user;
 
           // .then((res) => {
           //   localStorage.setItem("tkn", res.data.token);
@@ -57,14 +55,17 @@ export const authOptions = {
       },
     }),
   ],
+  //   session: {},
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
-      console.log("check jwt callback-->", token, uId, trigger, session);
-      return true;
+    async jwt({ token, user }) {
+      console.log("check jwt callback-->", token, user);
+      return { ...token, ...user };
+      //   return true;
     },
-    async session(session, token) {
+    async session({ session, token, user }) {
       // Modify the session object
-      session.user.id = token.id; // Example: Set user ID in the session
+      console.log("session object--->form session callback-->", session);
+      session.user = token; // Example: Set user ID in the session
       return session;
     },
   },
